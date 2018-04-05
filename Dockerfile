@@ -1,4 +1,16 @@
 ##DRAFT under development
+##############################################################################
+# TODO:
+# * Just one/two layers
+# ** Layer One for apk, installations/git clone/build, cleanup
+# * Decide a common place for each script 
+# * Add: maze.py
+# * Add: pipesX.sh
+# * Add: weave.sh
+# * Add: snakes.pl
+# * CI with VSOnline? TravisCI?
+##############################################################################
+
 
 
 FROM alpine:3.7
@@ -31,7 +43,7 @@ RUN cd $BASE_SRC; \
 
 RUN apk add --no-cache gcc musl-dev autoconf automake ncurses-dev
 
-RUN BASE_SRC="src"; \
+RUN cd $BASE_SRC; \
     GIT_URL="https://github.com/pipeseroni/pipes.c"; \
     FILE_NAME="pipes.c"; \
     git clone $GIT_URL; \
