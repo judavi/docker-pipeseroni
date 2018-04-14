@@ -14,9 +14,7 @@
 
 FROM alpine:3.7
 
-ARG foo
-
-LABEL test="$foo"
+ENV BASE_SRC=src
 
 ##############################################################################
 # pipes.sh
@@ -24,22 +22,18 @@ LABEL test="$foo"
 RUN apk update && \
 	apk upgrade && \
   apk add --no-cache git wget unzip && \
-  apk add --no-cache make bash ncurses
-
-RUN BASE_SRC="src"; \
-    mkdir $BASE_SRC; 
-
-RUN BASE_SRC="src"; \
-    cd $BASE_SRC; \
-    GIT_URL="https://github.com/pipeseroni/pipes.sh"; \
-    FILE_NAME="pipes.sh"; \
-    git clone $GIT_URL; \
-    cd $FILE_NAME; \
-    make PREFIX=$HOME/.local install; \
-    cd ..
+  apk add --no-cache make bash ncurses && \
+  mkdir $BASE_SRC && \
+  cd $BASE_SRC  && \
+  GIT_URL='https://github.com/pipeseroni/pipes.sh'  && \
+  FILE_NAME='pipes.sh'  && \
+  git clone $GIT_URL  && \
+  cd $FILE_NAME  && \
+  make PREFIX=$HOME/.local install  && \
+  cd ..
 
 ###Placed in the home directory
-###/root/.local/bin
+###/root/.local/bin/pipes.sh
 
 ##############################################################################
 # pipes.c
@@ -86,7 +80,7 @@ RUN BASE_SRC="src"; \
     git clone $GIT_URL; \
     cd $FILE_NAME; \
     make PREFIX=$HOME/.local install; 
-# pipesX.sh /root/.local/bin
+# pipesX.sh /root/.local/bin/pipesX.sh
 
 ##############################################################################
 # weave.sh
@@ -112,10 +106,9 @@ RUN BASE_SRC="src"; \
     GIT_URL="https://github.com/pipeseroni/snakes.pl"; \
     FILE_NAME="snakes.pl"; \
     git clone $GIT_URL; \
-    cd $FILE_NAME; \
-    cp weave.sh /root/.local/bin; \
-    chmod 0755 /root/.local/bin/weave.sh
-# weave.sh root/.local/bin/weave.sh
+    cd $FILE_NAME
+
+# snakes.pl root/.local/bin/weave.pl
 
 ##############################################################################
 # Clean up
