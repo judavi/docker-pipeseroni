@@ -1,23 +1,15 @@
-##DRAFT under development
 ##############################################################################
 # TODO:
 # * Just one/two layers
-# ** Layer One for apk, installations/git clone/build, cleanup
-# * Decide a common place for each script 
-# * Add: snakes.pl
 # * CI with VSOnline? TravisCI?
-# * Add CC0 file.
 # * Write documentation.
 ##############################################################################
-
-
-
 FROM alpine:3.7
 
 ENV BASE_SRC=src
 
 ##############################################################################
-# pipes.sh
+# pipes.sh (execute using pipes.sh)
 ##############################################################################
 RUN apk update && \
 	apk upgrade && \
@@ -29,14 +21,11 @@ RUN apk update && \
   FILE_NAME='pipes.sh'  && \
   git clone $GIT_URL  && \
   cd $FILE_NAME  && \
-  make PREFIX=$HOME/.local install  && \
+  make install  && \
   cd ..
 
-###Placed in the home directory
-###/root/.local/bin/pipes.sh
-
 ##############################################################################
-# pipes.c
+# pipes.c  (execute using cpipes)
 ##############################################################################
 
 RUN apk add --no-cache gcc musl-dev autoconf automake ncurses-dev
@@ -51,9 +40,6 @@ RUN BASE_SRC="src"; \
     autoreconf -i -I autoconf-archive/m4; \
     ./configure && make && make install
 
-# cpipes
-
-
 ##############################################################################
 # maze.py
 ##############################################################################
@@ -66,11 +52,11 @@ RUN BASE_SRC="src"; \
     FILE_NAME="maze.py"; \
     git clone $GIT_URL; \
     cd $FILE_NAME; \
-    pwd; \
-    pip3 install .
+    cp $FILE_NAME /bin; \
+    chmod 0755 /bin/$FILE_NAME
 
 ##############################################################################
-# pipesX.sh
+# pipesX.sh (execute using pipesx.sh)
 ##############################################################################
 
 RUN BASE_SRC="src"; \
@@ -79,11 +65,10 @@ RUN BASE_SRC="src"; \
     FILE_NAME="pipesX.sh"; \
     git clone $GIT_URL; \
     cd $FILE_NAME; \
-    make PREFIX=$HOME/.local install; 
-# pipesX.sh /root/.local/bin/pipesX.sh
+    make install
 
 ##############################################################################
-# weave.sh
+# weave.sh (execute weave.sh)
 ##############################################################################
 
 RUN BASE_SRC="src"; \
@@ -92,13 +77,11 @@ RUN BASE_SRC="src"; \
     FILE_NAME="weave.sh"; \
     git clone $GIT_URL; \
     cd $FILE_NAME; \
-    cp weave.sh /root/.local/bin; \
-    chmod 0755 /root/.local/bin/weave.sh
-# weave.sh root/.local/bin/weave.sh
-
+    cp weave.sh /bin; \
+    chmod 0755 /bin/weave.sh
 
 ##############################################################################
-# snakes.pl
+# snakes.pl (execute snakes.pl)
 ##############################################################################
 
 RUN BASE_SRC="src"; \
@@ -106,14 +89,15 @@ RUN BASE_SRC="src"; \
     GIT_URL="https://github.com/pipeseroni/snakes.pl"; \
     FILE_NAME="snakes.pl"; \
     git clone $GIT_URL; \
-    cd $FILE_NAME
-
-# snakes.pl root/.local/bin/weave.pl
+    cd $FILE_NAME; \
+    cp snake.pl /bin; \
+    chmod 0755 /bin/snake.pl
 
 ##############################################################################
 # Clean up
 ##############################################################################
-#RUN rm -rf /var/cache/apk/*; \
-#    apk del git wget unzip make gcc musl-dev autoconf automake
+RUN rm -rf $BASE_SRC; \
+    rm -rf /var/cache/apk/*; \
+    apk del git wget unzip make gcc musl-dev autoconf automake
     
 
